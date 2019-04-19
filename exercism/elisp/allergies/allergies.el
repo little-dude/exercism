@@ -2,35 +2,24 @@
 
 ;;; Commentary:
 
+;; taken from
+;; https://exercism.io/tracks/elisp/exercises/allergies/solutions/6498c769926b49b19cfa290e8f0385d4
+
 ;;; Code:
+(setq allergen-names '("eggs"
+                       "peanuts"
+                       "shellfish"
+                       "strawberries"
+                       "tomatoes"
+                       "chocolate"
+                       "pollen"
+                       "cats"))
 
-(setq allergens
-'("eggs" "peanuts" "shellfish" "strawberries" "tomatoes" "chocolate" "pollen" "cats"))
+(defun allergen-list (score)
+  (seq-filter (lambda (a) (allergic-to-p score a)) allergen-names))
 
-(defun filter-map (f seq)
-  (seq-filter #'identity (seq-map f seq)))
-
-(defun in-base-2 (n)
-  "Return the decomposition of N in base 2."
-  (let ((decomposition '()))
-    (while (> n 0)
-      (let ((quotient (/ n 2))
-            (remainder (% n 2)))
-        (setq decomposition (cons remainder decomposition))
-        (setq n quotient)))
-    
-    decomposition))
-
-(defun allergen-list (n)
-  (filter-map
-   (lambda (pair) (if (car pair) (cdr pair) nil))
-   (seq-mapn
-    #'cons
-    (reverse (seq-map (lambda (x) (if (= 1 x) t nil)) (in-base-2 n)))
-    allergens)))
-
-(defun allergic-to-p (score allergen)
-  (seq-contains (allergen-list score) allergen 'equal))
+(defun allergic-to-p (score allergy)
+  (/= 0 (logand score (lsh 1 (seq-position allergen-names allergy)))))
 
 (provide 'allergies)
 ;;; allergies.el ends here
