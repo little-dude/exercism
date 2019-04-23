@@ -6,21 +6,29 @@
 
 
 ;;; Code:
+
+(defun sanitize-string (s)
+  "Convert S to lowercase and remove non-letter characters."
+  (seq-filter
+   (lambda (c) (<= ?a c ?z))
+   (downcase s)))
+
+(defun encode-letters (letters)
+  "Encode the given sequence of characters LETTERS.
+The sequence must contain only lowercase characters that
+represent latin letters \"a\" to \"z\"."
+  (let* ((alphabet "abcdefghijklmnopqrstuvwxyz")
+         (tebahpla (reverse alphabet)))
+    (seq-map
+     (lambda (c) (elt tebahpla (seq-position alphabet c '=)))
+     letters)))
+
 (defun encode (plaintext)
   "Encode PLAINTEXT to atbash-cipher encoding."
-  (substring
-   (seq-reduce
-    (lambda (cipher-text chars) (concat cipher-text " " chars))
-    (seq-partition
-     (seq-map
-      (lambda (c) (elt reversed-alphabet (seq-position alphabet c '=)))
-      (seq-filter
-       (lambda (c) (<= ?a c ?z))
-       (downcase plaintext)))
-     5)
-    "")
-   1
-   nil))
+  (mapconcat
+   'identity
+   (seq-partition (encode-letters (sanitize-string plaintext)) 5)
+   " "))
 
 (provide 'atbash-cipher)
 ;;; atbash-cipher.el ends here
