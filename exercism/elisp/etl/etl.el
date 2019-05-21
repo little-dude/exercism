@@ -7,16 +7,16 @@
 (defun etl (hash-table)
   (let ((new-hash-table (make-hash-table)))
     (maphash
-     (lambda (score letters)
+     (lambda (score chars)
        (if (< score 0)
            (error "Negative score")
-         (cl-loop for letter in letters
+         (cl-loop for char in chars
                   do (progn
-                       (unless (stringp letter)
+                       (unless (stringp char)
                          (error "Invalid value: not a string"))
-                       (unless (equal (length letter) 1)
-                         (error (format "Invalid value: expected a letter, got %s" letter)))
-                       (puthash (downcase letter) score new-hash-table)))))
+                       (unless (equal (length char) 1)
+                         (error (format "Invalid value: expected a char, got %s" char)))
+                       (puthash (downcase char) score new-hash-table)))))
      hash-table)
     new-hash-table))
 
