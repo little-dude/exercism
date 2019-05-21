@@ -12,9 +12,9 @@
            (error "Negative score")
          (cl-loop for letter in letters
                   do (progn
-                       (when (not (char-or-string-p letter))
-                         (error "Invalid value (not a string)"))
-                       (when (not (equal (length letter) 1))
+                       (unless (stringp letter)
+                         (error "Invalid value: not a string"))
+                       (unless (equal (length letter) 1)
                          (error (format "Invalid value: expected a letter, got %s" letter)))
                        (puthash (downcase letter) score new-hash-table)))))
      hash-table)
