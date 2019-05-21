@@ -10,13 +10,14 @@
      (lambda (score chars)
        (if (< score 0)
            (error "Negative score")
-         (cl-loop for char in chars
-                  do (progn
-                       (unless (stringp char)
-                         (error "Invalid value: not a string"))
-                       (unless (equal (length char) 1)
-                         (error (format "Invalid value: expected a char, got %s" char)))
-                       (puthash (downcase char) score new-hash-table)))))
+         (mapcar
+          (lambda (char)
+            (unless (stringp char)
+              (error "Invalid value: not a string"))
+            (unless (equal (length char) 1)
+              (error (format "Invalid value: expected a char, got %s" char)))
+            (puthash (downcase char) score new-hash-table))
+          chars)))
      hash-table)
     new-hash-table))
 
