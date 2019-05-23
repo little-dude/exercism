@@ -11,7 +11,6 @@
       (when (and (not (zerop i)) (zerop (% n i)))
           (setq factors (cons i factors))))))
 
-
 (defun is-perfect (n)
   "Return `t` is N is a perfect number, `nil` otherwise."
   (and (/= 1 n)
