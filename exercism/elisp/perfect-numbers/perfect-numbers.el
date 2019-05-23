@@ -21,7 +21,11 @@
 
 (defun perfect-numbers (n)
   "Return the perfect numbers smaller than or equal to N."
-    (seq-filter 'is-perfect (number-sequence 2 n)))
+  (let* ((perfect-numbers '(6))
+         (highest (car (last perfect-numbers)))
+         (new-perfect-numbers (seq-filter 'is-perfect (number-sequence (1+ highest) n))))
+    (nconc perfect-numbers new-perfect-numbers)
+    (seq-filter (apply-partially '>= n) perfect-numbers)))
 
 (provide 'perfect-numbers)
 ;;; perfect-numbers.el ends here
