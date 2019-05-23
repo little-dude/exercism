@@ -4,6 +4,8 @@
 
 ;;; Code:
 
+(setq lexical-binding t)
+
 (defun factors-of (n)
   "Return a list of the factors of N."
   (let ((factors nil))
@@ -18,13 +20,13 @@
               (factors-sum (seq-reduce '+ factors 0)))
          (= n factors-sum))))
 
-(defun perfect-numbers (n)
-  "Return the perfect numbers smaller than or equal to N."
-  (let* ((perfect-numbers '(6))
-         (highest (car (last perfect-numbers)))
-         (new-perfect-numbers (seq-filter 'is-perfect (number-sequence (1+ highest) n))))
-    (nconc perfect-numbers new-perfect-numbers)
-    (seq-filter (apply-partially '>= n) perfect-numbers)))
+(let ((result ()))
+  (defun perfect-numbers (n)
+    "Return the perfect numbers smaller than or equal to N."
+    (let* ((last-pn (if result (1+ (car (last result))) 2))
+           (new-pns (seq-filter 'is-perfect (number-sequence last-pn n))))
+      (setq result (append result new-pns))
+      (seq-filter (apply-partially '>= n) result))))
 
 (provide 'perfect-numbers)
 ;;; perfect-numbers.el ends here
