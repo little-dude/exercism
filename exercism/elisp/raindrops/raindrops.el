@@ -6,9 +6,9 @@
 
 (defun convert (n)
   "Convert integer N to its raindrops string."
-  (pcase (concat (and (zerop (mod n 3)) "Pling")
-                 (and (zerop (mod n 5)) "Plang")
-                 (and (zerop (mod n 7)) "Plong"))
+  (pcase (concat (if (zerop (mod n 3)) "Pling")
+                 (if (zerop (mod n 5)) "Plang")
+                 (if (zerop (mod n 7)) "Plong"))
     ("" (format "%d" n))
     (s s)))
 
