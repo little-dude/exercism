@@ -1,12 +1,13 @@
-;;; crypto-square.el --- Crypto Square (exercism)
+;;; crypto-square.el --- Crypto Square (exercism) -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 
 ;;; Code:
 
-
-;; this is needed because we use generators (see `iter-rectangle-sizes` below).
-(setq lexical-binding t)
+(require 'generator) ; for iter-defun
+(require 'subr-x)    ; for string-join, although we could just use
+                     ; mapconcat
+(require 'seq)       ; for the seq- functions
 
 (defun normalize-string (s)
   "Remove spaces and ponctuation from S, and downcase it."
