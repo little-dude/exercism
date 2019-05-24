@@ -28,13 +28,9 @@ The rectangles `(r c)` are such that `c >= r` and `c - r <= 1`."
 (defun find-fitting-rectangle (s)
   "Return a rectangle big enough to fit the string S.
 The rectangle is a pair `(r c)` where `c >= r` and `c - r <= 1`."
-  (let ((rectangles (iter-rectangle-sizes)))
-    (cl-loop
-     (let* ((rect (iter-next rectangles))
-            (r (car rect))
-            (c (nth 1 rect)))
-       (when (<= (length s) (* r c))
-         (cl-return rect))))))
+  (cl-loop for rect iter-by (iter-rectangle-sizes)
+         when (<= (length s) (apply #'* rect))
+         return rect))
 
 (defun get-chunks (s)
   "Split the string S in `c` chunks of length `r`.
