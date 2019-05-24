@@ -45,15 +45,8 @@ The rectangle is a pair `(r c)` where `c >= r` and `c - r <= 1`."
 (defun encode-chunks (chunks)
   "Encode a list CHUNKS of `r` chunks of length `c`.
 The output is a list of `c` chunks or length `r`."
-  (let ((c (length chunks))
-        (r (length (car chunks))))
-    (cl-loop for i from 0 below r
-             collect (cl-loop for j from 0 below c
-                              collect (condition-case nil
-                                          (elt (nth j chunks) i)
-                                        (error nil))
-                              into letters
-                              finally return (concat (seq-filter 'identity letters))))))
+  (if chunks
+      (apply (apply-partially #'cl-mapcar #'string) (pad-chunks chunks))))
 
 (defun pad-chunks (chunks)
   "Add extra spaces to the smaller chunks."
@@ -67,10 +60,9 @@ The output is a list of `c` chunks or length `r`."
 (defun encipher (s)
   "Encipher S."
   (string-join
-   (pad-chunks
-    (encode-chunks
-     (get-chunks
-      (normalize-string s))))
+   (encode-chunks
+    (get-chunks
+     (normalize-string s)))
    " "))
 
 (provide 'crypto-square)
