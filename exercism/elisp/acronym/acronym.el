@@ -10,8 +10,8 @@
   (let ((words (split-string s "[ \f\t\n\r\v-]" t)))
     (cl-loop for word in words
              if (not (string= "" word))
-             collect (substring word 0 1) into letters
-             finally (return (mapconcat 'upcase letters "")))))
+             concat (substring word 0 1) into acronym
+             finally (return (upcase acronym)))))
 
 (provide 'acronym)
 ;;; acronym.el ends here
