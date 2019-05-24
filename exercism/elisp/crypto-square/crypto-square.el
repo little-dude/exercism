@@ -57,10 +57,11 @@ The output is a list of `c` chunks or length `r`."
 
 (defun pad-chunks (chunks)
   "Add extra spaces to the smaller chunks."
-  (let* ((chunks-length (length (car chunks)))
-         (format-string (format "%%-%ds" chunks-length)))
+  (let* ((chunks-length (length (car chunks))))
     (seq-map
-     (lambda (chunk) (setf chunk (format format-string chunk)))
+     (lambda (chunk)
+       (let ((padding (make-string (- chunks-length (length chunk)) ?\s)))
+         (setf chunk (concat chunk padding))))
      chunks)))
 
 (defun encipher (s)
