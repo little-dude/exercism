@@ -10,7 +10,7 @@
 
 (defun total ()
   "Return the number of grains of wheat on the chessboard."
-  (seq-reduce '+ (seq-map 'square (number-sequence 1 64)) 0))
+  (square 65))
 
 
 (provide 'grains)
