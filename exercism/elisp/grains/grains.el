@@ -6,7 +6,7 @@
 
 (defun square (n)
   "Return the number of grains of wheat on square N."
-  (expt 2 (1- n)))
+  (expt 2.0 (1- n)))
 
 (defun total ()
   "Return the number of grains of wheat on the chessboard."
