@@ -35,12 +35,12 @@ The rectangle is a pair `(r c)` where `c >= r` and `c - r <= 1`."
 (defun get-chunks (s)
   "Split the string S in `c` chunks of length `r`.
 `r` and `c` are integers such that `c >= r` and `c - r <= 1`."
-  (let ((r (nth 1 (find-fitting-rectangle s))))
-    (seq-partition s r)))
+  (let ((c (nth 1 (find-fitting-rectangle s))))
+    (seq-partition s c)))
 
 (defun encode-chunks (chunks)
-  "Encode a list CHUNKS of `r` chunks of length `c`.
-The output is a list of `c` chunks or length `r`."
+  "Encode a list CHUNKS of `c` chunks of length `r`.
+The output is a list of `r` chunks or length `c`."
   (if chunks
       (apply (apply-partially #'cl-mapcar #'string) (pad-chunks chunks))))
 
