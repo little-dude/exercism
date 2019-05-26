@@ -16,14 +16,12 @@
 (iter-defun iter-rectangle-sizes ()
   "A generator that return rectangles with increasing sizes.
 The rectangles `(r c)` are such that `c >= r` and `c - r <= 1`."
-  (let ((rect '(0 0)))
+  (let ((r 0) (c 0))
     (while t
-      (let ((r (car rect))
-            (c (nth 1 rect)))
-        (if (> c r)
-            (setq rect (list (1+ r) c))
-          (setq rect (list r (1+ c))))
-        (iter-yield rect)))))
+      (if (> c r)
+          (setq r (1+ r))
+        (setq c (1+ c)))
+      (iter-yield (list r c)))))
 
 (defun find-fitting-rectangle (s)
   "Return a rectangle big enough to fit the string S.
