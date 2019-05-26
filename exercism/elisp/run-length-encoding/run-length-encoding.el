@@ -47,23 +47,18 @@
 
 (defun run-length-decode (s)
   "Decode S."
-  (let ((i 0)
+  (let ((pos 0)
+        (regexp "\\([0-9]*\\)\\([^0-9]\\)")
         (result ""))
-    (catch 'eos
-      (while (< i (length s))
-        (let* ((c1 (substring s i (1+ i)))
-               (c2 (condition-case nil
-                       (substring s (1+ i) (+ 2 i))
-                     (error (throw 'eos (concat result c1)))))
-               (count (string-to-number c1)))
-          (if (zerop count)
-              (progn
-                (setq result (concat result c1))
-                (setq i (1+ i)))
-            (progn
-              (setq result (concat result (make-string count (string-to-char c2))))
-              (setq i (+ 2 i))))))
-      result)))
+    (while (string-match regexp s pos)
+      (let ((count (string-to-number (match-string 1 s)))
+            (char (match-string 2 s)))
+        (if (zerop count)
+            (setq result (concat result char))
+          (setq result (concat result (make-string count (string-to-char char))))))
+      ;; next match will start after the last match
+      (setq pos (match-end 0)))
+    result))
 
 (provide 'run-length-encoding)
 ;;; run-length-encoding.el ends here
