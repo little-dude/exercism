@@ -4,6 +4,11 @@ package proverb
 
 import "fmt"
 
+const (
+	stanza = "For want of a %s the %s was lost."
+	last   = "And all for the want of a %s."
+)
+
 // Proverb returns the proverb's sentences for the given words.
 func Proverb(rhyme []string) []string {
 	result := make([]string, 0, len(rhyme))
@@ -13,8 +18,14 @@ func Proverb(rhyme []string) []string {
 
 	previous := rhyme[0]
 	for _, s := range rhyme[1:] {
-		result = append(result, fmt.Sprintf("For want of a %s the %s was lost.", previous, s))
+		result = append(result, fmt.Sprintf(stanza, previous, s))
 		previous = s
 	}
-	return append(result, fmt.Sprintf("And all for the want of a %s.", rhyme[0]))
+	return append(result, fmt.Sprintf(last, rhyme[0]))
 }
+
+// Benchmark:
+//
+// BenchmarkProverb-8   	  300000	      3454 ns/op	    1472 B/op	      51 allocs/op
+// PASS
+// ok  	github.com/little-dude/exercism/go/proverb	1.090s
