@@ -2,7 +2,7 @@
 
 (defn collatz [num]
   (if (<= num 0)
-    (throw (Exception. "expected a strictly positive integer."))
+    (throw (IllegalArgumentException. "expected a strictly positive integer"))
     (loop [value num
            steps 0]
       (cond
