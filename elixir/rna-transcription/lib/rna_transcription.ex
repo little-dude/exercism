@@ -9,9 +9,6 @@ defmodule RnaTranscription do
   """
   @spec to_rna([char]) :: [char]
   def to_rna(dna) do
-    if ! Enumerable.impl_for(dna) do
-      dna = [dna]
-    end
     for c <- dna do
       case c do
         ?A -> ?U
