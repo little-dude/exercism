@@ -14,18 +14,15 @@ defmodule ProteinTranslation do
   defp translate(rna) do
     {codon, rna} = String.split_at(rna, 3)
 
-    case of_codon(codon) do
-      {:ok, protein} ->
-        case of_rna(rna) do
-          {:ok, proteins} -> {:ok, [protein | proteins]}
-          e -> e
-        end
-
-      {:ok, "STOP"} ->
+    case {of_codon(codon), of_rna(rna)} do
+      {{:ok, "STOP"}, _} ->
         {:ok, []}
 
-      {:error, _} ->
-        raise "invalid RNA"
+      {{:ok, protein}, {:ok, proteins}} ->
+        {:ok, [protein | proteins]}
+
+      {_, _} ->
+        {:error, "invalid RNA"}
     end
   end
 
