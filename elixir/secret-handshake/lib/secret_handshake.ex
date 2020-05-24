@@ -1,15 +1,6 @@
 defmodule SecretHandshake do
   use Bitwise
 
-  @actions [
-    wink: 1,
-    double_blink: 1 <<< 1,
-    close_your_eyes: 1 <<< 2,
-    jump: 1 <<< 3
-  ]
-
-  @reverse 1 <<< 4
-
   @doc """
   Determine the actions of a secret handshake based on the binary
   representation of the given `code`.
@@ -26,19 +17,20 @@ defmodule SecretHandshake do
   """
   @spec commands(code :: integer) :: list(String.t())
   def commands(code) do
-    actions =
-      @actions
-      |> Enum.filter(fn {_, action_code} ->
-        (code &&& action_code) != 0
-      end)
-      |> Enum.map(fn {action, _} ->
-        action |> Atom.to_string |> String.replace("_", " ")
-      end)
+    []
+    |> do_commands(has_action_code?(code, 0x08), "jump")
+    |> do_commands(has_action_code?(code, 0x04), "close your eyes")
+    |> do_commands(has_action_code?(code, 0x02), "double blink")
+    |> do_commands(has_action_code?(code, 0x01), "wink")
+    |> do_commands(has_action_code?(code, 0x10), &Enum.reverse/1)
+  end
 
-    if code &&& @reverse do
-      Enum.reverse(actions)
-    else
-      actions
-    end
+  defp do_commands(acc, do?, todo)
+  defp do_commands(acc, false, _), do: acc
+  defp do_commands(acc, true, str) when is_binary(str), do: [str | acc]
+  defp do_commands(acc, true, fun), do: fun.(acc)
+
+  defp has_action_code?(code, action_code) do
+    action_code == (code &&& action_code)
   end
 end
