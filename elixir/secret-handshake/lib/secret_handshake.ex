@@ -1,13 +1,13 @@
 defmodule SecretHandshake do
   use Bitwise
 
-  @actions [
-    {1 <<< 3, "jump"},
-    {1 <<< 2, "close your eyes"},
-    {1 <<< 1, "double blink"},
+  @action_codes [
     {1 <<< 0, "wink"},
-    {1 <<< 4, &Enum.reverse/1}
+    {1 <<< 1, "double blink"},
+    {1 <<< 2, "close your eyes"},
+    {1 <<< 3, "jump"}
   ]
+  @reverse_code 1 <<< 4
 
   @doc """
   Determine the actions of a secret handshake based on the binary
@@ -25,16 +25,17 @@ defmodule SecretHandshake do
   """
   @spec commands(code :: integer) :: list(String.t())
   def commands(code) do
-    reducer = fn {action_code, action}, acc ->
-      do_command(acc, do?(code, action_code), action)
-    end
-
-    Enum.reduce(@actions, [], reducer)
+    @action_codes
+    |> Enum.filter(fn {action_code, _} -> (code &&& action_code) != 0 end)
+    |> Enum.map(fn {_, action} -> action end)
+    |> reverse?(code)
   end
 
-  defp do_command(acc, false, _), do: acc
-  defp do_command(acc, true, str) when is_binary(str), do: [str | acc]
-  defp do_command(acc, true, fun), do: fun.(acc)
-
-  defp do?(code, action_code), do: action_code == (code &&& action_code)
+  def reverse?(actions, code) do
+    if (code &&& @reverse_code) != 0 do
+      Enum.reverse(actions)
+    else
+      actions
+    end
+  end
 end
