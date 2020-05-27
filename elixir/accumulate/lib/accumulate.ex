@@ -16,16 +16,11 @@ defmodule Accumulate do
   """
 
   @spec accumulate(list, (any -> any)) :: list
-  def accumulate(list, fun) do
-    Enum.reverse(accumulate([], list, fun))
-  end
+  def accumulate(list, f), do: do_accumulate(list, f)
 
-  defp accumulate(acc, [], _fun) do
-    acc
-  end
+  defp do_accumulate([], _f), do: []
 
-  defp accumulate(acc, list, fun) do
-    [head | tail] = list
-    accumulate([fun.(head) | acc], tail, fun)
+  defp do_accumulate([head | tail], f) do
+    [f.(head) | do_accumulate(tail, f)]
   end
 end
